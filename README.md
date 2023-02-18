@@ -1,9 +1,10 @@
 # Utiliser un onduleur connecté à un NAS Synology (maître) avec un NAS Asustor (esclave) <!-- omit in toc -->
 
-> **Objectif :**<br>
+> **Objectif**<br>
 > Utiliser, depuis un NAS Asustor, un onduleur en "slave" (UPS) qui est connecté en USB sur un NAS Synology avec DSM 7.1.x, donc en maître sur le Synology.
 
-> **Note :**<br>
+> **Note**
+> <br>
 > Les commandes suivantes sont pour la plupart à lancer en root dans un terminal, pensez à faire un : `sudo -i`
 
 <br>
@@ -24,7 +25,9 @@
 - [III. Configuration en SSH de l'UPS dans les fichiers de configuration](#iii-configuration-en-ssh-de-lups-dans-les-fichiers-de-configuration)
   - [III.1. Création du script qui va s'occuper des modifications à faire et aussi de sauvegarder les fichiers de `/etc/ups/`](#iii1-création-du-script-qui-va-soccuper-des-modifications-à-faire-et-aussi-de-sauvegarder-les-fichiers-de-etcups)
   - [III.2. Explications du script et mise en route](#iii2-explications-du-script-et-mise-en-route)
-  - [III.3. aaaaa](#iii3-aaaaa)
+    - [III.2.1. Quelques explications](#iii21-quelques-explications)
+    - [III.2.2. Lancement manuel du script pour vérifier que tout se passe bien](#iii22-lancement-manuel-du-script-pour-vérifier-que-tout-se-passe-bien)
+    - [III.2.3. Création d'un lien symbolique du script vers `/usr/local/etc/init.d/`](#iii23-création-dun-lien-symbolique-du-script-vers-usrlocaletcinitd)
 - [IV. Inspirations pour réaliser ce tuto](#iv-inspirations-pour-réaliser-ce-tuto)
 
 <hr>
@@ -64,6 +67,8 @@ Il est recommandé de ne pas activer le "***EuP Mode***" :
 
 Je préfère laisser le NAS reprendre son état d'avant la coupure de courant dès que ce dernier est restauré. Ainsi, si le NAS était allumé, quand le courant sera revenu, il redémarrera.
 
+---
+
 ## II. Configuration de l'UPS en maître dans DSM
 
 Dans DSM, il faut paramétrer le serveur UPS pour l'onduleur connecté en USB.
@@ -74,6 +79,8 @@ Suivre les instructions de la capture suivante :
 L'Asustor pourra maintenant accéder à l'UPS connecté sur le Synology.
 
 PS : il faudra aussi que le pare-feu du NAS autorise la connexion depuis l'IP de l'asustor sur le service de l'UPS. Au besoin, créer une règle dédiée.
+
+---
 
 ## III. Configuration en SSH de l'UPS dans les fichiers de configuration
 
@@ -98,78 +105,137 @@ Le script s'appelle `partage-UPS-Synology-avec-NAS-Asustor.sh`, il faudra le pla
 
 Le script : [partage-UPS-Synology-avec-NAS-Asustor.sh](https://raw.githubusercontent.com/MilesTEG1/Partage-UPS-Synology-avec-NAS-Asustor/main/partage-UPS-Synology-avec-NAS-Asustor.sh)
 
-```bash
-#!/bin/sh
-# Script de modification du fichier /etc/ups/upsmon.conf avec backup des fichiers contenus dans /etc/ups
-# Faire un :
-# chmod +x partage-UPS-Synology-avec-NAS-Asustor.sh
+<details>
+  <summary>Clique ici pour afficher le script</summary>
+  
+  ```bash
+  #!/bin/sh
+  # Script de modification du fichier /etc/ups/upsmon.conf avec backup des fichiers contenus dans /etc/ups
+  # Faire un :
+  # chmod +x partage-UPS-Synology-avec-NAS-Asustor.sh
 
-# Pour que les modifications soient effectuées à chaque redémarrage, il faut faire un lien dans /usr/local/etc/init.d/
-#
-# ln -s /share/docker/_scripts/partage-UPS-Synology-avec-NAS-Asustor.sh /usr/local/etc/init.d/S84UPSpartageAvecSYNOLOGY
-#
-# init.d colle l'option 'start' à tout ce qui se nomme Sxxxx et 'stop' à tout ce qui se nomme 'Kxxx'
+  # Pour que les modifications soient effectuées à chaque redémarrage, il faut faire un lien dans /usr/local/etc/init.d/
+  #
+  # ln -s /share/docker/_scripts/partage-UPS-Synology-avec-NAS-Asustor.sh /usr/local/etc/init.d/S84UPSpartageAvecSYNOLOGY
+  #
+  # init.d colle l'option 'start' à tout ce qui se nomme Sxxxx et 'stop' à tout ce qui se nomme 'Kxxx'
 
-#####################################################
-## Variables à modifier
-    NOM_UPS_Syno="ups"
-    IP_Syno_UPS="192.168.2.200"
-    USER_UPS="monuser"
-    USER_MDP_UPS="secret"
+  #####################################################
+  ## Variables à modifier
+      NOM_UPS_Syno="ups"
+      IP_Syno_UPS="192.168.2.200"
+      USER_UPS="monuser"
+      USER_MDP_UPS="secret"
 
-    DEST_BACKUP=/home/User-Admin/UPS-CONF-Backup
-##
-#####################################################
+      DEST_BACKUP=/home/User-Admin/UPS-CONF-Backup
+  ##
+  #####################################################
 
-UPS_CONF_PATH=/etc/ups
+  UPS_CONF_PATH=/etc/ups
 
-CHAINE_FINALE="MONITOR $NOM_UPS_Syno@$IP_Syno_UPS 1 $USER_UPS $USER_MDP_UPS slave"
+  CHAINE_FINALE="MONITOR $NOM_UPS_Syno@$IP_Syno_UPS 1 $USER_UPS $USER_MDP_UPS slave"
 
-# # DEBUT DEBUG :
-# UPS_CONF_PATH=/home/User-Admin
-# printf "\nChaine finale = "
-# echo $CHAINE_FINALE
-printf "\n--- Début du fichier upsmon.conf non modifié ---\n"
-cat $UPS_CONF_PATH/upsmon.conf
-printf "\n--- Fin du fichier upsmon.conf non modifié ---\n"
-# # FIN DEBUG
+  # # DEBUT DEBUG :
+  # UPS_CONF_PATH=/home/User-Admin
+  # printf "\nChaine finale = "
+  # echo $CHAINE_FINALE
+  printf "\n--- Début du fichier upsmon.conf non modifié ---\n"
+  cat $UPS_CONF_PATH/upsmon.conf
+  printf "\n--- Fin du fichier upsmon.conf non modifié ---\n"
+  # # FIN DEBUG
 
-# Copie backup des fichiers du dossier UPS_CONF_PATH
-mkdir -p $DEST_BACKUP
-sudo cp "$UPS_CONF_PATH" $DEST_BACKUP
+  # Copie backup des fichiers du dossier UPS_CONF_PATH
+  mkdir -p $DEST_BACKUP
+  sudo cp "$UPS_CONF_PATH" $DEST_BACKUP
 
-# Modification du fichier upsmon.conf pour utiliser en slave l'UPS branché en USB sur le Synology
-sudo sed -i "2s/.*/${CHAINE_FINALE}/" $UPS_CONF_PATH/upsmon.conf
+  # Modification du fichier upsmon.conf pour utiliser en slave l'UPS branché en USB sur le Synology
+  sudo sed -i "2s/.*/${CHAINE_FINALE}/" $UPS_CONF_PATH/upsmon.conf
 
-# DEBUT DEBUG :
-printf "\n--- Début du fichier upsmon.conf MODIFIÉ ---\n"
-cat $UPS_CONF_PATH/upsmon.conf
-printf "\n--- Fin du fichier upsmon.conf MODIFIÉ ---\n"
-# FIN DEBUG
+  # DEBUT DEBUG :
+  printf "\n--- Début du fichier upsmon.conf MODIFIÉ ---\n"
+  cat $UPS_CONF_PATH/upsmon.conf
+  printf "\n--- Fin du fichier upsmon.conf MODIFIÉ ---\n"
+  # FIN DEBUG
 
-# Commandes pour redémarrer le démon upsmon :
-upsmon -c stop
-upsmon
-```
+  # Commandes pour redémarrer le démon upsmon :
+  upsmon -c stop
+  upsmon
+  ```
 
-Il faudra modifier les variables suivantes pour les accorder avec votre configuration. Normalement pour un NAS Synology, seules les variables `IP_Syno_UPS` et `DEST_BACKUP` seront à modifier.
+  Il faudra modifier les variables suivantes pour les accorder avec votre configuration. Normalement pour un NAS Synology, seules les variables `IP_Syno_UPS` et `DEST_BACKUP` seront à modifier.
 
-```bash
-#####################################################
-## Variables à modifier
-    NOM_UPS_Syno="ups"
-    IP_Syno_UPS="192.168.2.200"
-    USER_UPS="monuser"
-    USER_MDP_UPS="secret"
+  ```bash
+  #####################################################
+  ## Variables à modifier
+      NOM_UPS_Syno="ups"
+      IP_Syno_UPS="192.168.2.200"
+      USER_UPS="monuser"
+      USER_MDP_UPS="secret"
 
-    DEST_BACKUP=/home/User-Admin/UPS-CONF-Backup
-##
-#####################################################
-```
+      DEST_BACKUP=/home/User-Admin/UPS-CONF-Backup
+  ##
+  #####################################################
+  ```
 
-
+</details>
 
 ### III.2. Explications du script et mise en route
+
+#### III.2.1. Quelques explications
+
+1. Le script va construire, grâce aux variables paramétrées précédemment, la ligne correcte qui va permettre au NAS Asustor de communiquer avec le serveur UPS sur le NAS Synology.
+2. Le script va afficher le contenu du fichier qui sera modifié `/etc/ups/upsmon.conf`.
+3. Ensuite, il va créer si besoin le dossier de destination de la sauvegarde `DEST_BACKUP`, puis copier le contenu du dossier `/etc/ups/` dans ce dossier `DEST_BACKUP`.
+4. Ensuite, avec la commande `sed`, il va modifier uniquement la deuxième ligne du fichier `/etc/ups/upsmon.conf` pour passer de :
+   
+   ```EditorConfig
+   MONITOR asustor@192.168.2.200 1 admin 1111 slave
+   ```
+   
+   à :
+   
+   ```EditorConfig
+   MONITOR ups@192.168.2.200 1 monuser secret slave
+   ```
+   
+   *Les adresses IP seront certainement différentes.*
+5. Puis, il affiche à nouveau le fichier `upsmon.conf` qui vient d'être modifié.
+6. Et enfin, avec les commandes `upsmon -c stop` et `upsmon`, il va arrêter puis relancer le démon `upsmon` afin de prendre en compte les modifications faites dans le fichier `upsmon.conf`.
+
+#### III.2.2. Lancement manuel du script pour vérifier que tout se passe bien
+
+On va lancer manuellement le script pour être sûr que ce dernier modifie correctement le fichier de configuration.
+
+On se place donc dans le dossier le contenant, et on fait en sorte qu'il puisse être exécuté :
+
+```bash
+chmod +x partage-UPS-Synology-avec-NAS-Asustor.sh
+```
+
+Puis on le lance :
+
+```bash
+./partage-UPS-Synology-avec-NAS-Asustor.sh
+```
+
+On devrait voir s'afficher le contenu du fichier avant la modification, puis après la modification, puis ceci :
+
+```log
+Network UPS Tools upsmon 2.7.2
+kill: No such process
+UPS: ups@192.168.2.200 (slave) (power value 1)
+Using power down flag file /etc/killpower
+```
+
+Cela indique que `upsmon` a bien été connecté au serveur UPS du synology en mode slave.
+
+Vous pouvez dès lors faire un crash test : couper l'alimentation électrique de l'onduleur branché au Synology.
+
+> **Warning**
+> This is a warning
+
+
+#### III.2.3. Création d'un lien symbolique du script vers `/usr/local/etc/init.d/`
 
 Une fois ce script placé dans le dossier choisi, pour ce qui me concerne c'est : `/share/docker/_scripts/`, il faut faire un lien symbolique vers `/usr/local/etc/init.d/` afin que le script soit lancé à chaque démarrage du NAS.
 
@@ -181,33 +247,16 @@ Il faut donc lancer la commande suivante (pensez à adapter le chemin d'accès d
 ln -s /share/docker/_scripts/partage-UPS-Synology-avec-NAS-Asustor.sh /usr/local/etc/init.d/S84UPSpartageAvecSYNOLOGY
 ```
 
+Voilà, le lien est fait, il ne reste plus qu'à rebooter le NAS pour voir si le fichier est bien modifié après le reboot.
 
+Utiliser la commande suivante pour vérifier si le fichier est bien modifié :
 
-
-On a ceci en retour :
-
-```log
-Network UPS Tools upsmon 2.7.2
+```shell
+cat /etc/ups/upsmon.conf
 ```
 
-
-### III.3. aaaaa
-
-Une fois les fichiers modifiés (ou restaurés), on relance le démon :
-
-```bash
-upsmon
-````
-
-On a ceci en retour :
-
-```log
-Network UPS Tools upsmon 2.7.2
-kill: No such process
-UPS: ups@192.168.2.200 (slave) (power value 1)
-Using power down flag file /etc/killpower
-```
-
+---
+---
 
 ## IV. Inspirations pour réaliser ce tuto
 
