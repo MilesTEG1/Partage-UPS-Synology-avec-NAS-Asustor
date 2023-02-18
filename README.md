@@ -34,6 +34,7 @@
 
 Il faut commencer par ajouter une connexion à un serveur UPS dans ADM. Pour cela, il faut aller dans "External Devices", et configurer comme suit :
 
+<img src="https://github.com/MilesTEG1/Partage-UPS-Synology-avec-NAS-Asustor/raw/main/images/1-ADM-External-Devices-1.png" width="100%" >
 
 ### I.2. aaaaa
 
