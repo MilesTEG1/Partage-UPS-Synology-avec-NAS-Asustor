@@ -96,7 +96,7 @@ Il faut donc créer un script dans un dossier partagé. Moi j'ai choisi de place
 Le script s'appelle `partage-UPS-Synology-avec-NAS-Asustor.sh`, il faudra le placer dans le dossier choisi, via ADM par exemple.
 (Il est possible d'utiliser un éditeur en ligne de commande comme vi, ou nano (à installer avec opkg, après avoir installé le paquet Entware)).
 
-Le script : partage-UPS-Synology-avec-NAS-Asustor.sh
+Le script : [partage-UPS-Synology-avec-NAS-Asustor.sh](https://raw.githubusercontent.com/MilesTEG1/Partage-UPS-Synology-avec-NAS-Asustor/main/partage-UPS-Synology-avec-NAS-Asustor.sh)
 
 ```bash
 #!/bin/sh
