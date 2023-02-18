@@ -241,6 +241,10 @@ Vous pouvez dès lors faire un crash test : couper l'alimentation électrique de
 > **Warning**
 > <br>Attention, pour que l'Asustor reçoive bien les instructions du serveur UPS, il est évident que toute chaine de transmission soit placée sur l'onduleur : le NAS Synology qui fait office de serveur UPS, l'éventuel switch auquel est connecté le(s) NAS, et le NAS Asustor.
 
+Si tout s'est bien passé, vous devriez pouvoir observer ce genre d'évènement dans les logs visibles dans "***System Information***" :
+
+<img src="https://github.com/MilesTEG1/Partage-UPS-Synology-avec-NAS-Asustor/raw/main/images/6-ADM-System-Information-Log.png" width="100%" >
+
 #### III.2.3. Création d'un lien symbolique du script vers `/usr/local/etc/init.d/`
 
 Rappel : le script est placé dans le dossier choisi au [§-III.1.](#iii1-création-du-script-qui-va-soccuper-des-modifications-à-faire-et-aussi-de-sauvegarder-les-fichiers-de-etcups), pour ce qui me concerne c'est : `/share/docker/_scripts/`.
