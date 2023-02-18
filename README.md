@@ -153,7 +153,7 @@ Le script : [partage-UPS-Synology-avec-NAS-Asustor.sh](https://raw.githubusercon
 
   # Copie backup des fichiers du dossier UPS_CONF_PATH
   mkdir -p $DEST_BACKUP
-  sudo cp "$UPS_CONF_PATH" $DEST_BACKUP
+  sudo cp "$UPS_CONF_PATH"/* "$DEST_BACKUP"
 
   # Modification du fichier upsmon.conf pour utiliser en slave l'UPS branché en USB sur le Synology
   sudo sed -i "2s/.*/${CHAINE_FINALE}/" $UPS_CONF_PATH/upsmon.conf
