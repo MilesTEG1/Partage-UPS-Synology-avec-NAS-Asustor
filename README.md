@@ -3,9 +3,16 @@
 > **Objectif**<br>
 > Utiliser, depuis un NAS Asustor, un onduleur en "slave" (UPS) qui est connecté en USB sur un NAS Synology avec DSM 7.1.x, donc en maître sur le Synology.
 
+<br>
+
 > **Note**
 > <br>
 > Les commandes suivantes sont pour la plupart à lancer en root dans un terminal, pensez à faire un : `sudo -i`
+
+<br> 
+
+> **Warning**
+> <br>Attention, pour que l'Asustor reçoive bien les instructions du serveur UPS, il est évident que toute chaine de transmission soit placée sur l'onduleur : le NAS Synology qui fait office de serveur UPS, l'éventuel switch auquel est connecté le(s) NAS, et le NAS Asustor.
 
 <br>
 
@@ -232,14 +239,16 @@ Cela indique que `upsmon` a bien été connecté au serveur UPS du synology en m
 Vous pouvez dès lors faire un crash test : couper l'alimentation électrique de l'onduleur branché au Synology.
 
 > **Warning**
-> This is a warning
-
+> <br>Attention, pour que l'Asustor reçoive bien les instructions du serveur UPS, il est évident que toute chaine de transmission soit placée sur l'onduleur : le NAS Synology qui fait office de serveur UPS, l'éventuel switch auquel est connecté le(s) NAS, et le NAS Asustor.
 
 #### III.2.3. Création d'un lien symbolique du script vers `/usr/local/etc/init.d/`
 
-Une fois ce script placé dans le dossier choisi, pour ce qui me concerne c'est : `/share/docker/_scripts/`, il faut faire un lien symbolique vers `/usr/local/etc/init.d/` afin que le script soit lancé à chaque démarrage du NAS.
+Rappel : le script est placé dans le dossier choisi au [§-III.1.](#iii1-création-du-script-qui-va-soccuper-des-modifications-à-faire-et-aussi-de-sauvegarder-les-fichiers-de-etcups), pour ce qui me concerne c'est : `/share/docker/_scripts/`.
 
-Le nom du lien a une grande importance, puisque s'il commence par `Sxxx` il sera lancé au démarrage, avec l'option `start` en paramètre (option dont on ne se servira pas, et donc pas testée dans le script). Si le lien commence par `Kxxx` il sera lancé à l'extinction du NAS, avec l'option `stop`, et nous n'avons pas besoin de script qui se lance à l'extinction pour l'onduleur.
+Il faut faire un lien symbolique vers `/usr/local/etc/init.d/` afin que le script soit lancé à chaque démarrage du NAS.
+
+> **Important**
+> <br>Le nom du lien a une grande importance, puisque s'il commence par `Sxxx` il sera lancé au démarrage, avec l'option `start` en paramètre (option dont on ne se servira pas, et donc pas testée dans le script). Si le lien commence par `Kxxx` il sera lancé à l'extinction du NAS, avec l'option `stop`, et nous n'avons pas besoin de script qui se lance à l'extinction pour l'onduleur.
 
 Il faut donc lancer la commande suivante (pensez à adapter le chemin d'accès du script `/share/docker/_scripts/partage-UPS-Synology-avec-NAS-Asustor.sh` :
 
