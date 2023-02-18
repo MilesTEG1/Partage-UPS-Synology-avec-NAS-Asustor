@@ -20,11 +20,12 @@
 - [I. Configuration de l'UPS dans ADM](#i-configuration-de-lups-dans-adm)
   - [I.1. Ajout d'un UPS réseau](#i1-ajout-dun-ups-réseau)
   - [I.2. Configuration de la gestion d'alimentation dans ADM](#i2-configuration-de-la-gestion-dalimentation-dans-adm)
-- [II. Configuration en SSH de l'UPS dans les fichiers de configuration](#ii-configuration-en-ssh-de-lups-dans-les-fichiers-de-configuration)
-  - [II.1. Création du script qui va s'occuper des modifications à faire et aussi de sauvegarder les fichiers de `/etc/ups/`](#ii1-création-du-script-qui-va-soccuper-des-modifications-à-faire-et-aussi-de-sauvegarder-les-fichiers-de-etcups)
-  - [II.2. Explications du script et mise en route](#ii2-explications-du-script-et-mise-en-route)
-  - [II.3. aaaaa](#ii3-aaaaa)
-- [III. Inspirations pour réaliser ce tuto](#iii-inspirations-pour-réaliser-ce-tuto)
+- [II. Configuration de l'UPS en maître dans DSM](#ii-configuration-de-lups-en-maître-dans-dsm)
+- [III. Configuration en SSH de l'UPS dans les fichiers de configuration](#iii-configuration-en-ssh-de-lups-dans-les-fichiers-de-configuration)
+  - [III.1. Création du script qui va s'occuper des modifications à faire et aussi de sauvegarder les fichiers de `/etc/ups/`](#iii1-création-du-script-qui-va-soccuper-des-modifications-à-faire-et-aussi-de-sauvegarder-les-fichiers-de-etcups)
+  - [III.2. Explications du script et mise en route](#iii2-explications-du-script-et-mise-en-route)
+  - [III.3. aaaaa](#iii3-aaaaa)
+- [IV. Inspirations pour réaliser ce tuto](#iv-inspirations-pour-réaliser-ce-tuto)
 
 <hr>
 
@@ -63,7 +64,18 @@ Il est recommandé de ne pas activer le "***EuP Mode***" :
 
 Je préfère laisser le NAS reprendre son état d'avant la coupure de courant dès que ce dernier est restauré. Ainsi, si le NAS était allumé, quand le courant sera revenu, il redémarrera.
 
-## II. Configuration en SSH de l'UPS dans les fichiers de configuration
+## II. Configuration de l'UPS en maître dans DSM
+
+Dans DSM, il faut paramétrer le serveur UPS pour l'onduleur connecté en USB.
+Suivre les instructions de la capture suivante :
+
+<img src="https://github.com/MilesTEG1/Partage-UPS-Synology-avec-NAS-Asustor/raw/main/images/5-DSM-Configuration-Alimentation-UPS.png" width="100%" >
+
+L'Asustor pourra maintenant accéder à l'UPS connecté sur le Synology.
+
+PS : il faudra aussi que le pare-feu du NAS autorise la connexion depuis l'IP de l'asustor sur le service de l'UPS. Au besoin, créer une règle dédiée.
+
+## III. Configuration en SSH de l'UPS dans les fichiers de configuration
 
 On attaque ici la partie un peu pénible, car il faut se connecter en SSH au NAS.
 
@@ -77,7 +89,7 @@ Le fichier à modifier est `/etc/ups/upsmon.conf`. Et ce fichier est réinitiali
 
 Il va donc falloir utiliser un script qu'on va faire lancer après chaque démarrage du NAS pour modifier ce fichier, et lancer les quelques commandes pour que ces modifications soient prises en compte.
 
-### II.1. Création du script qui va s'occuper des modifications à faire et aussi de sauvegarder les fichiers de `/etc/ups/`
+### III.1. Création du script qui va s'occuper des modifications à faire et aussi de sauvegarder les fichiers de `/etc/ups/`
 
 Il faut donc créer un script dans un dossier partagé. Moi j'ai choisi de placer mes différents scripts dans le dossier `/share/docker/_scripts/`. Si vous utiliser un autre emplacement, il faudra modifier en conséquence ce chemin d'accès.
 
@@ -157,7 +169,7 @@ Il faudra modifier les variables suivantes pour les accorder avec votre configur
 
 
 
-### II.2. Explications du script et mise en route
+### III.2. Explications du script et mise en route
 
 Une fois ce script placé dans le dossier choisi, pour ce qui me concerne c'est : `/share/docker/_scripts/`, il faut faire un lien symbolique vers `/usr/local/etc/init.d/` afin que le script soit lancé à chaque démarrage du NAS.
 
@@ -179,7 +191,7 @@ Network UPS Tools upsmon 2.7.2
 ```
 
 
-### II.3. aaaaa
+### III.3. aaaaa
 
 Une fois les fichiers modifiés (ou restaurés), on relance le démon :
 
@@ -197,7 +209,7 @@ Using power down flag file /etc/killpower
 ```
 
 
-## III. Inspirations pour réaliser ce tuto
+## IV. Inspirations pour réaliser ce tuto
 
 - [Network UPS Tools (NUT) Ultimate Guide #Linux NUT Client (remote)](https://docs.technotim.live/posts/NUT-server-guide/#linux-nut-client-remote)
 - [Use Synology NAS as UPS Server to safely power down your other servers/computers](https://www.reddit.com/r/synology/comments/gtkjam/use_synology_nas_as_ups_server_to_safely_power/)
