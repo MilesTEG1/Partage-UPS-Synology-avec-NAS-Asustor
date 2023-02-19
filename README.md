@@ -1,7 +1,7 @@
 # Utiliser un onduleur connecté à un NAS Synology (maître) avec un NAS Asustor (esclave) <!-- omit in toc -->
 
 > **Objectif**<br>
-> Utiliser, depuis un NAS Asustor, un onduleur en "slave" (UPS) qui est connecté en USB sur un NAS Synology avec DSM 7.1.x, donc en maître sur le Synology.
+> Utiliser, depuis un NAS Asustor, un onduleur en "slave" (UPS) qui est connecté en USB (donc en maître) sur un NAS Synology avec DSM 7.1.x, donc en maître sur le Synology.
 
 <br>
 
@@ -25,11 +25,11 @@
 
 ### Table des matières <!-- omit in toc -->
 
-- [I. Configuration de l'UPS dans ADM](#i-configuration-de-lups-dans-adm)
+- [I. Configuration de l'UPS en esclave dans ADM](#i-configuration-de-lups-en-esclave-dans-adm)
   - [I.1. Ajout d'un UPS réseau](#i1-ajout-dun-ups-réseau)
   - [I.2. Configuration de la gestion d'alimentation dans ADM](#i2-configuration-de-la-gestion-dalimentation-dans-adm)
 - [II. Configuration de l'UPS en maître dans DSM](#ii-configuration-de-lups-en-maître-dans-dsm)
-- [III. Configuration en SSH de l'UPS dans les fichiers de configuration](#iii-configuration-en-ssh-de-lups-dans-les-fichiers-de-configuration)
+- [III. Configuration en SSH de l'UPS en escalve dans les fichiers de configuration sur l'Asustor](#iii-configuration-en-ssh-de-lups-en-escalve-dans-les-fichiers-de-configuration-sur-lasustor)
   - [III.1. Création du script qui va s'occuper des modifications à faire et aussi de sauvegarder les fichiers de `/etc/ups/`](#iii1-création-du-script-qui-va-soccuper-des-modifications-à-faire-et-aussi-de-sauvegarder-les-fichiers-de-etcups)
   - [III.2. Explications du script et mise en route](#iii2-explications-du-script-et-mise-en-route)
     - [III.2.1. Quelques explications](#iii21-quelques-explications)
@@ -39,7 +39,12 @@
 
 <hr>
 
-## I. Configuration de l'UPS dans ADM
+> **Note**
+>  <br>Ce qui suit a été utilisé avec succès avec les NAS suivants :
+>  - Asustor AS6704T sous ADM 4.2.0.RE71 
+>  - Synology DS920+ sous DSM 7.1.1-42962 Update 4
+
+## I. Configuration de l'UPS en esclave dans ADM
 
 ### I.1. Ajout d'un UPS réseau
 
@@ -78,20 +83,21 @@ Je préfère laisser le NAS reprendre son état d'avant la coupure de courant d�
 
 ## II. Configuration de l'UPS en maître dans DSM
 
-Dans DSM, il faut paramétrer le serveur UPS pour l'onduleur connecté en USB.
+Dans DSM, il faut paramétrer le serveur UPS en maître pour l'onduleur connecté en USB.
 Suivre les instructions de la capture suivante :
 
 <img src="https://github.com/MilesTEG1/Partage-UPS-Synology-avec-NAS-Asustor/raw/main/images/5-DSM-Configuration-Alimentation-UPS.png" width="100%" >
 
 L'Asustor pourra maintenant accéder à l'UPS connecté sur le Synology.
 
-PS : il faudra aussi que le pare-feu du NAS autorise la connexion depuis l'IP de l'asustor sur le service de l'UPS. Au besoin, créer une règle dédiée.
+> **Note**
+> <br>Il faudra aussi que le pare-feu du NAS autorise la connexion depuis l'IP de l'asustor sur le service de l'UPS. Au besoin, créer une règle dédiée.
 
 ---
 
-## III. Configuration en SSH de l'UPS dans les fichiers de configuration
+## III. Configuration en SSH de l'UPS en escalve dans les fichiers de configuration sur l'Asustor
 
-On attaque ici la partie un peu pénible, car il faut se connecter en SSH au NAS.
+On attaque ici la partie un peu pénible, car il faut se connecter en SSH au NAS Asustor.
 
 J'utilise ici mon compte administrateur `User-Admin` pour me connecter à l'asustor dont l'IP est `192.168.2.203` sur le port personnalisé `1234` (ces valeurs sont à changer par les vôtres !) :
 
