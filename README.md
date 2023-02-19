@@ -23,6 +23,14 @@
 
 <hr>
 
+> **Note**
+>  <br>Ce qui suit a été utilisé avec succès avec les NAS suivants :
+>  - Asustor AS6704T sous ADM 4.2.0.RE71 
+>  - Synology DS920+ sous DSM 7.1.1-42962 Update 4
+
+
+<hr>
+
 ### Table des matières <!-- omit in toc -->
 
 - [I. Configuration de l'UPS en esclave dans ADM](#i-configuration-de-lups-en-esclave-dans-adm)
@@ -39,10 +47,6 @@
 
 <hr>
 
-> **Note**
->  <br>Ce qui suit a été utilisé avec succès avec les NAS suivants :
->  - Asustor AS6704T sous ADM 4.2.0.RE71 
->  - Synology DS920+ sous DSM 7.1.1-42962 Update 4
 
 ## I. Configuration de l'UPS en esclave dans ADM
 
