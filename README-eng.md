@@ -33,24 +33,24 @@
 
 ### Table of contents <!-- omit in toc -->
 
-- [I. Configuring the UPS as a slave in ADM](#i-configuration-de-lups-en-slave-dans-adm)
-  - [I.1. Adding a network UPS](#i1-add-dun-network-ups)
-  - [I.2. Configuring power management in ADM](#i2-configuring-power-management-in-adm)
-- [II. Configuring UPS as master in DSM](#ii-configuring-de-lups-as-master-in-dsm)
-- [III. SSH configuration of the UPS as a slave in the configuration files on the Asustor](#iii-configuration-en-ssh-de-lups-en-escalve-dans-les-fichiers-de-configuration-sur-lasustor )
-  - [III.1. Creation of the script which will take care of the modifications to be made and also to save the files of `/etc/ups/`](#iii1-creation-of-the-script-which-will-take-care-of-the-modifications-to-do-and-also-backup-etcups-files)
-  - [III.2. Script explanations and getting started](#iii2-script-explanations-and-getting-started)
-    - [III.2.1. Some explanations](#iii21-some-explanations)
-    - [III.2.2. Manual launch of the script to verify that everything is going well](#iii22-manual-launch-of-the-script-to-verify-that-everything-is-going-well)
-    - [III.2.3. Creating a symbolic link from the script to `/usr/local/etc/init.d/`](#iii23-creation-dun-lien-symbolique-du-script-vers-usrlocaletcinitd)
-- [IV. Inspirations for making this tutorial](#iv-inspirations-for-making-this-tuto)
+- [I. Configuring the UPS as a slave in ADM](#i)
+  - [I.1. Adding a network UPS](#i1)
+  - [I.2. Configuring power management in ADM](#i2)
+- [II. Configuring UPS as master in DSM](#ii)
+- [III. SSH configuration of the UPS as a slave in the configuration files on the Asustor](#iii)
+  - [III.1. Creation of the script which will backup and modify the `/etc/ups/` files](#iii1)
+  - [III.2. Script explanations and getting started](#iii2)
+    - [III.2.1. Some explanations](#iii21)
+    - [III.2.2. Manual launch of the script to verify that everything is going well](#iii22)
+    - [III.2.3. Creating a symbolic link from the script to `/usr/local/etc/init.d/`](#iii23)
+- [IV. Inspiration for this tutorial](#iv)
 
 <hr>
 
 
-## I. Configuring the UPS as a slave in ADM
+## I. Configuring the UPS as a slave in ADM <a name="i"></a>
 
-### I.1. Adding a Network UPS
+### I.1. Adding a Network UPS <a name="i1"></a>
 
 Begin by adding a connection to a UPS server in ADM. For that, you have to go to "***External Devices***", and configure as follows:
 - Check the box "***Enable network UPS Support***";
@@ -75,7 +75,7 @@ Once the settings are made/chosen, you should get something like this:
 It should be noted that we do not obtain information neither on the % of battery of the inverter, nor on the remaining duration. And even after you finish following the tutorial it will still be like this.
 I did not manage to get this information in ADM... They are still visible in DSM on the Synology.
 
-### I.2. Configuring Power Management in ADM
+### I.2. Configuring Power Management in ADM <a name="i2"></a>
 
 It is recommended not to activate the "***EuP Mode***":
 <img src="images/4-ADM-Settings-Hardware-Power.png" width="100%" >
@@ -84,7 +84,7 @@ I prefer to let the NAS return to its pre-power outage state as soon as the powe
 
 ---
 
-## II. Configuring UPS as Master in DSM
+## II. Configuring UPS as Master in DSM <a name="ii"></a>
 
 In DSM, you must configure the UPS server as master for the inverter connected via USB.
 Follow the instructions in the following screenshot:
@@ -98,7 +98,7 @@ The Asustor will now be able to access the connected UPS on the Synology.
 
 ---
 
-## III. SSH configuration of the UPS as a slave in the configuration files on the Asustor
+## III. SSH configuration of the UPS as a slave in the configuration files on the Asustor <a name="iii"></a>
 
 Here we attack the somewhat painful part, because you have to connect in SSH to the Asustor NAS.
 
@@ -112,7 +112,7 @@ The file to modify is `/etc/ups/upsmon.conf`. And this file is reset each time t
 
 It will therefore be necessary to use a script that will be launched after each start of the NAS to modify this file, and to launch the few commands so that these modifications are taken into account.
 
-### III.1. Creation of the script which will take care of the modifications to be made and also to save the files of `/etc/ups/`
+### III.1. Creation of the script which will backup and modify the `/etc/ups/` files <a name="iii1"></a>
 
 It is therefore necessary to create a script in a shared folder. I chose to place my various scripts in the `/share/docker/_scripts/` folder. If you use another location, you will have to modify this access path accordingly.
 
@@ -195,9 +195,9 @@ The script: [partage-UPS-Synology-avec-NAS-Asustor.sh](https://raw.githubusercon
 
 </details>
 
-### III.2. Script explanations and getting started
+### III.2. Script explanations and getting started <a name="iii2"></a>
 
-#### III.2.1. Some explanations
+#### III.2.1. Some explanations <a name="iii21"></a>
 
 1. The script will build, using the variables set previously, the correct line that will allow the Asustor NAS to communicate with the UPS server on the Synology NAS.
 2. The script will display the contents of the file that will be modified `/etc/ups/upsmon.conf`.
@@ -218,7 +218,7 @@ The script: [partage-UPS-Synology-avec-NAS-Asustor.sh](https://raw.githubusercon
 5. Then, it again displays the `upsmon.conf` file which has just been modified.
 6. And finally, with the commands `upsmon -c stop` and `upsmon`, it will stop then restart the `upsmon` daemon in order to take into account the modifications made in the `upsmon.conf` file.
 
-#### III.2.2. Manual launch of the script to verify that everything is going well
+#### III.2.2. Manual launch of the script to verify that everything is going well <a name="iii22"></a>
 
 We will manually launch the script to be sure that it correctly modifies the configuration file.
 
@@ -254,7 +254,7 @@ If everything went well, you should be able to observe this kind of event in the
 
 <img src="images/6-ADM-System-Information-Log.png" width="100%" >
 
-#### III.2.3. Creating a symbolic link from the script to `/usr/local/etc/init.d/`
+#### III.2.3. Creating a symbolic link from the script to `/usr/local/etc/init.d/` <a name="iii23"></a>
 
 Reminder: the script is placed in the folder chosen in [§-III.1.](#iii1-création-du-script-qui-va-soccuper-des-modifications-à-faire-et-aussi-de-sauvegarder-les-fichiers-de-etcups), for me it is: `/share/docker/_scripts/`.
 
@@ -280,7 +280,7 @@ cat /etc/ups/upsmon.conf
 ---
 ---
 
-## IV. Inspiration for this tutorial
+## IV. Inspiration for this tutorial <a name="iv"></a>
 
 - [Network UPS Tools (NUT) Ultimate Guide #Linux NUT Client (remote)](https://docs.technotim.live/posts/NUT-server-guide/#linux-nut-client-remote)
 - [Use Synology NAS as UPS Server to safely power down your other servers/computers](https://www.reddit.com/r/synology/comments/gtkjam/use_synology_nas_as_ups_server_to_safely_power/)
