@@ -1,11 +1,11 @@
 #!/bin/sh
 # Script de modification du fichier /etc/ups/upsmon.conf avec backup des fichiers contenus dans /etc/ups
 # Faire un :
-# chmod +x partage-UPS-Synology-avec-NAS-Asustor.sh
+# chmod +x Share_Synology_UPS_with_Asustor.sh
 
 # Pour que les modifications soient effectuées à chaque redémarrage, il faut faire un lien dans /usr/local/etc/init.d/
 #
-# ln -s /share/docker/_scripts/partage-UPS-Synology-avec-NAS-Asustor.sh /usr/local/etc/init.d/S84UPSpartageAvecSYNOLOGY
+# ln -s /share/docker/_scripts/Share_Synology_UPS_with_Asustor.sh /usr/local/etc/init.d/S84UPSpartageAvecSYNOLOGY
 #
 # init.d colle l'option 'start' à tout ce qui se nomme Sxxxx et 'stop' à tout ce qui se nomme 'Kxxx'
 
