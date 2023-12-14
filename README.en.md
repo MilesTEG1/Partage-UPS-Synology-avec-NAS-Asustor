@@ -208,7 +208,7 @@ The script: [partage-UPS-Synology-avec-NAS-Asustor.sh](https://raw.githubusercon
    MONITOR asustor@192.168.2.200 1 admin 1111 slave
    ```
    
-   to this:
+   à :
    
    ```EditorConfig
    MONITOR ups@192.168.2.200 1 monuser secret slave
@@ -225,13 +225,13 @@ We will manually launch the script to be sure that it correctly modifies the con
 We therefore place ourselves in the folder containing it, and we make sure that it can be executed:
 
 ```bash
-chmod +x Share_Synology_UPS_with_Asustor.sh
+chmod +x partage-UPS-Synology-avec-NAS-Asustor.sh
 ```
 
 Then we run it:
 
 ```bash
-./Share_Synology_UPS_with_Asustor.sh
+./partage-UPS-Synology-avec-NAS-Asustor.sh
 ```
 
 We should see the contents of the file before the modification, then after the modification, then this:
