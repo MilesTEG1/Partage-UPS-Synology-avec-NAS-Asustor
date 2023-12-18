@@ -1,3 +1,5 @@
+English | [French](README.fr.md)
+
 # Use an UPS connected to a Synology NAS (master) with an Asustor NAS (slave) <!-- omit in toc -->
 
 > **Objective**<br>
@@ -208,7 +210,7 @@ The script: [partage-UPS-Synology-avec-NAS-Asustor.sh](https://raw.githubusercon
    MONITOR asustor@192.168.2.200 1 admin 1111 slave
    ```
    
-   to this:
+   to:
    
    ```EditorConfig
    MONITOR ups@192.168.2.200 1 monuser secret slave
