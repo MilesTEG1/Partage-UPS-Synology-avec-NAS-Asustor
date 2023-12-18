@@ -1,3 +1,5 @@
+English | [French](README.fr.md)
+
 # Use an UPS connected to a Synology NAS (master) with an Asustor NAS (slave) <!-- omit in toc -->
 
 > **Objective**<br>
