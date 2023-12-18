@@ -1,3 +1,5 @@
+[English](README.md) | French
+
 # Utiliser un onduleur connecté à un NAS Synology (maître) avec un NAS Asustor (esclave) <!-- omit in toc -->
 
 > **Objectif**<br>
